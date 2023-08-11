@@ -1,0 +1,41 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+{% if error %}
+{{ error }}
+
+<br/>
+<br/>
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'all.css' %}" type="text/css" >
+<div class="box" >
+    <img  src="{% static 'logo.jpg' %}"  alt="Company Logo" width="200px" height="200px" style="padding: 5px;">
+
+    <h1>SignUp!</h1>
+    <br/>
+
+    <form method = "POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <h5>Username:</h5>
+        <input type="text" name="username" />
+        <br/>
+        <br/>
+        <h5>Password:</h5>
+        <input type="password" name="password1" />
+        <br/>
+        <br/>
+        <h5>Confirm Password:</h5>
+        <input type="password" name="password2" />
+        <br/>
+        <br/>
+        <input class ="btn btn-primary" type="submit" value= "SignUp" />
+        <br/>
+
+    </form>
+</div>
+{% endblock %}
