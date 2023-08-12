@@ -1,0 +1,23 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+{% if error %}
+{{ error }}
+
+<br/>
+<br/>
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'all.css' %}" type="text/css" >
+<div class="box" >
+    <img  src="{% static 'logo.jpg' %}"  alt="Company Logo" width="200px" height="200px" style="padding: 5px;">
+
+    <h1>Success!</h1>
+    <br/>
+
+</div>
+{% endblock %}

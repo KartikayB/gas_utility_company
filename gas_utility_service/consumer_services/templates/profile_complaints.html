@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+{% if error %}
+{{ error }}
+<br/>
+<br/>
+
+{% endif %}
+<link rel="stylesheet" href="{% static 'all.css' %}" type="text/css" >
+<nav style="align-items: self-start;">
+    <a class="btn btn-primary"  href="/profile">Submit Complaint</a>
+    <a class="btn btn-primary"  href="/show_complaints">Show Complaints</a>
+</nav>
+
+<h1>User</h1>
+<ul>
+    <li>{{ user }}</li>
+    <li>{{ user.username }}</li>
+    <li>{{ user.id }}</li>
+    <li>{{ user.email }}</li>
+
+</ul>
+
+<table border="1">
+    <tr>
+      <th>Complaint ID</th>
+      <th>Issue</th>
+      <th>Address</th>
+      <th>Extra Info</th>
+      <th>Status</th>
+      <th>Date updated</th>
+    </tr>
+    {% for member in mymembers %}
+      <tr>
+        <td>{{ member.issue_id }}</td>
+        <td>{{ member.issue }}</td>
+        <td>{{ member.address }}</td>
+        <td>{{ member.extra_info }}</td>
+        <td>{{ member.status }}</td>
+        <td>{{ member.date_updated }}</td>
+      </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

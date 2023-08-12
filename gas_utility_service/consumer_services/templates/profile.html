@@ -1,9 +1,54 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<h1>Hello World!</h1>
-<p>Welcome to my first Django project!</p>
 
-</body>
-</html>
+{% if error %}
+{{ error }}
+<br/>
+<br/>
+
+{% endif %}
+<link rel="stylesheet" href="{% static 'all.css' %}" type="text/css" >
+<nav style="align-items: self-start;">
+    <a class="btn btn-primary"  href="/profile">Submit Complaint</a>
+    <a class="btn btn-primary"  href="/show_complaints">Show Complaints</a>
+</nav>
+
+<h1>User</h1>
+<ul>
+    <li>{{ user }}</li>
+    <li>{{ user.username }}</li>
+    <li>{{ user.id }}</li>
+    <li>{{ user.email }}</li>
+
+</ul>
+
+<form method = "POST" enctype="multipart/form-data"  action="{% url 'submit_request' %}">
+    {% csrf_token %}
+    <label for="Issue">Choose your issue:</label>
+
+    <select name="Issue" id="Issue">
+    <option value="Pipeline Leakage">Pipeline Leakage</option>
+    <option value="Pipeline Installment Request">Pipeline Installment Request</option>
+    <option value="Pipeline Failure">Pipeline Failure</option>
+    <option value="Other">Other</option>
+    </select>
+
+    <h5>Address:</h5>
+    <input type="text" name="address" placeholder="Service address"/>
+    <br/>
+    <br/>
+    <h5>Extra Information:</h5>
+    <input type="text" name="extra_info" placeholder="Any extra inform"/>
+    <br/>
+    <br/>
+    <h5>Please attach any file if needed:</h5>
+    <input type="file" name="file" placeholder="file"/>
+    <br/>
+    <br/>
+    <input class ="btn btn-primary" type="submit" value= "Submit" />
+    <br/>
+</form>
+
+{% endblock %}

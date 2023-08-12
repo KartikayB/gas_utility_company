@@ -1,27 +1,16 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
-from django.shortcuts import HttpResponseRedirect
-from .helper_files.form import CustomUserCreationForm
 
 # Create your views here.
 from django.http import HttpResponse
 from django.template import loader
 
-def hello_world(request):
-    return HttpResponse("Hello world!")
-
-def first_page(request):
-    template = loader.get_template('first_page.html')
-    return HttpResponse(template.render())
-
-
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+from .models import User_info
 
 def signup(request):
     if request.method == "POST":
@@ -30,9 +19,9 @@ def signup(request):
                 User.objects.get(username = request.POST['username'])
                 return render (request,'signup.html', {'error':'Username is already taken!'})
             except User.DoesNotExist:
-                user = User.objects.create_user(request.POST['username'],password=request.POST['password1'])
+                user = User.objects.create_user(request.POST['username'],password=request.POST['password1'],email=request.POST['email'])
                 auth.login(request,user)
-                return redirect('home')
+                return redirect('/profile', request)
         else:
             return render (request,'signup.html', {'error':'Password does not match!'})
     else:
@@ -43,7 +32,7 @@ def login(request):
         user = auth.authenticate(username=request.POST['username'],password = request.POST['password'])
         if user is not None:
             auth.login(request,user)
-            return redirect('home')
+            return redirect('/profile', request)
         else:
             return render (request,'login.html', {'error':'Username or password is incorrect!'})
     else:
@@ -57,3 +46,28 @@ def logout(request):
 def home(request):
     template = loader.get_template('home.html')
     return HttpResponse(template.render())
+
+def profile(request):
+    return render(request, 'profile.html')
+
+def submit_request(request):
+    try:
+        user = request.user
+    except:
+        return render(request,'error.html')
+   #handle case when user with that id does not exist
+    if request.method == 'POST':
+        file = request.FILES["file"]
+        User_info.objects.create(user=user, issue= request.POST['Issue'], address = request.POST['address'], 
+                                 extra_info = request.POST['extra_info'], file=file)
+        return render(request,'success.html')
+    else:
+        return render(request,'profile.html')
+    
+def show_complaints(request):
+    mydata = User_info.objects.all()
+    template = loader.get_template('profile_complaints.html')
+    context = {
+        'mymembers': mydata,
+    }
+    return HttpResponse(template.render(context, request))
