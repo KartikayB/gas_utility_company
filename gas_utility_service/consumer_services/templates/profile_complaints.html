@@ -58,7 +58,8 @@
               <th>Address</th>
               <th>Extra Info</th>
               <th>Status</th>
-              <th>Date updated</th>
+              <th>Date Created</th>
+              <th>Date Updated</th>
               <th>File Attached</th>
               <th>Note from Company</th>
             </tr>
@@ -70,6 +71,7 @@
                 <td>{{ member.extra_info }}</td>
                 <td>{{ member.status }}</td>
                 <td>{{ member.date_created }}</td>
+                <td>{{ member.updated_at }}</td>
                 <td><a href="/media/{{ member.file }}">{{ member.file }}</a></td>
                 <td>{{ member.admin_note }}</td>
               </tr>
