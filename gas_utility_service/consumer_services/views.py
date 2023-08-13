@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.conf import settings
 
 # Create your views here.
 from django.http import HttpResponse
@@ -11,6 +12,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from .models import User_info
+from django.core.exceptions import ValidationError
+from .validator import validate_password
 
 def signup(request):
     if request.method == "POST":
@@ -19,9 +22,13 @@ def signup(request):
                 User.objects.get(username = request.POST['username'])
                 return render (request,'signup.html', {'error':'Username is already taken!'})
             except User.DoesNotExist:
-                user = User.objects.create_user(request.POST['username'],password=request.POST['password1'],email=request.POST['email'])
-                auth.login(request,user)
-                return redirect('/profile', request)
+                try:
+                    validate_password(password=request.POST['password1'])
+                    user = User.objects.create_user(request.POST['username'],password=request.POST['password1'],email=request.POST['email'])
+                    auth.login(request,user)
+                    return redirect('/profile', request)
+                except Exception as error:
+                    return render (request,'signup.html', {'error':error})
         else:
             return render (request,'signup.html', {'error':'Password does not match!'})
     else:
