@@ -57,7 +57,10 @@ def submit_request(request):
         return render(request,'error.html')
    #handle case when user with that id does not exist
     if request.method == 'POST':
-        file = request.FILES["file"]
+        try:
+            file = request.FILES["file"]
+        except:
+            file = None
         User_info.objects.create(user=user, issue= request.POST['Issue'], address = request.POST['address'], 
                                  extra_info = request.POST['extra_info'], file=file)
         return render(request,'success.html')
@@ -65,7 +68,11 @@ def submit_request(request):
         return render(request,'profile.html')
     
 def show_complaints(request):
-    mydata = User_info.objects.all()
+    try:
+        user = request.user
+    except:
+        return render(request,'error.html')
+    mydata = User_info.objects.filter(user=user).values()
     template = loader.get_template('profile_complaints.html')
     context = {
         'mymembers': mydata,
